@@ -16,10 +16,10 @@ from ae import SynDataset
 import argparse
 
 
-def to_img(x):
-    x = x.clamp(0, 1)
-    x = x.view(x.size(0), 1, 28, 28)
-    return x
+# def to_img(x):
+#     x = x.clamp(0, 1)
+#     x = x.view(x.size(0), 1, 28, 28)
+#     return x
 
 
 class VAE(nn.Module):
@@ -167,7 +167,15 @@ def get_vae_losses(X):
     losses = get_losses(model, dataset, params, device)
     return losses
 
-
+def get_VAE_os(X):
+    """
+    takes in only data 'X', in samples as rows format
+    returns only list of outlier scores for each sample
+    higher score = more outlier
+    gives reconstruciton error from AE, should be largest for outliers
+    """
+    losses = get_vae_losses(X)
+    return losses
 
 if __name__ == '__main__':
     from torchvision.datasets import MNIST

@@ -260,6 +260,16 @@ def get_ae_losses(X):
     losses = get_losses(model, dataset, criterion, device)
     return losses
 
+def get_AE_os(X):
+    """
+    takes in only data 'X', in samples as rows format
+    returns only list of outlier scores for each sample
+    higher score = more outlier
+    """
+    losses = get_ae_losses(X)
+    #gives reconstruciton error from AE, should be largest for outliers
+    return losses
+
 if __name__ == '__main__':
 
      data_path = os.path.expanduser('~') +'/Data/synthetic/'

@@ -22,30 +22,11 @@ def graph_reg_OP(X, lamb, gamma, phi):
     S_kmin1 = np.random.randn(p,n)
     W_kmin1 = np.random.randn(p,n)
 
-    # Save for testing
-    # np.savetxt('L_k.txt', L_k)
-    # np.savetxt('W_k.txt', W_k)
-    # np.savetxt('S_k.txt', S_k)
-    # np.savetxt('S_kmin1.txt', S_kmin1)
-    # np.savetxt('W_kmin1.txt', W_kmin1)
-
-    # Load for testing
-    # L_k = np.loadtxt('L_k.txt')
-    # W_k = np.loadtxt('W_k.txt')
-    # S_k = np.loadtxt('S_k.txt')
-    # S_kmin1 = np.loadtxt('S_kmin1.txt')
-    # W_kmin1 = np.loadtxt('W_kmin1.txt')
-
     Z1_k = X - L_k - S_k
-    # print(Z1_k[:10,:10])
     Z2_k = W_k - L_k
-    # print(Z2_k[:10,:10])
     P1_k = nuclear_norm(L_k)
-    # print(P1_k)
     P2_k = lamb*sum(np.sqrt(np.sum(S_k**2, axis=0)))
-    # print(P2_k)
     P3_k =  gamma*np.trace(np.dot(L_k, np.dot(phi, L_k.T)))
-    # print(P3_k)
     converged=False
     count=0
     r1_k = 1
@@ -60,18 +41,13 @@ def graph_reg_OP(X, lamb, gamma, phi):
         H_2 = W_k + (Z2_k/r2_k)
         A = (r1_k * H_1 + r2_k * H_2) / (r1_k + r2_k)
         r_k = (r1_k + r2_k)/2
-        # print(r_k)
+
         L_kp1 = prox_nuc_norm(A, 1/r_k)
         S_kp1 = column_thresh((X - L_kp1 + (Z1_k/r1_k)), lamb/r1_k)
 
         #matrix inversion causes slowdown. Tweak
         W_kp1 = GOP_tweak(gamma, phi, r2_k, n, L_kp1, Z2_k)
-        # W_kp1_pt1 = np.argmin(gamma*np.trace(np.dot(W_k, np.dot(phi, W_k.T))))
-        # print(W_kp1_pt1)
-        # W_kp1_a = W_kp1_pt1 + 0.5*P2_k*(la.norm(W_k - (L_kp1 - Z2_k/P2_k), 'fro'))**2
 
-        # print(W_kp1[:10,:10])
-        # print(W_kp1_a)
         Z1_kp1 = Z1_k + r1_k * (X - L_kp1 - S_kp1)
         Z2_kp1 = Z2_k + r2_k * (W_kp1 - L_kp1)
 
@@ -154,14 +130,12 @@ def column_thresh(C, eps):
 def nuclear_norm(x):
     """
     sum of singular values
-    function n = norm_nuclear(x)
-    %NORM_NUCLEAR - Nuclear norm of x
-    %   Usage: norm_nuclear(x)
-    %
-    %   Input parameters
-    %       x       : a matrix
-    %   Output parameters
-    %       n       : nuclear norm of x
+    Nuclear norm of x
+       Usage: norm_nuclear(x)
+       Input parameters
+           x       : a matrix
+       Output parameters
+          n       : nuclear norm of x
     """
     if issparse(x):
         u, s, vt = svds(x, np.min(size(x)))
@@ -171,17 +145,15 @@ def nuclear_norm(x):
 
 def knn_graph(X,k):
     """
-    function  [Lap,W]=build_knn_graph(X,k)
-    %%%%%%%%%%%%
-    %%% This function computes the K-Nearest Neighbour graph.
-    %%% Inputs:
-    %%% X, is the data matrix with dimension (n x m) n is the number of samples and m is the number of features.
-    %%% k, is a scalar that defines the number of nearest neighbours.
-    %%%
-    %%% Outputs:
-    %%% Lap, is the graph Laplacian matrix of the k-nearest neighbour graph. It is an (n x n) symmetric positive semi-definite matrix.
-    %%% W, is the Weight matrix. It is an (n x n) symmetric matrix. It holds the weight of each edge of the k-nearest neighbour graph.
-    %%%%%%%%%%%%
+    from matlab version:
+    This function computes the K-Nearest Neighbour graph.
+    Inputs:
+    X, is the data matrix with dimension (n x m) n is the number of samples and m is the number of features.
+    k, is a scalar that defines the number of nearest neighbours.
+
+    Outputs:
+    Lap, is the graph Laplacian matrix of the k-nearest neighbour graph. It is an (n x n) symmetric positive semi-definite matrix.
+    W, is the Weight matrix. It is an (n x n) symmetric matrix. It holds the weight of each edge of the k-nearest neighbour graph.
     """
     K = k+1 #as don't want to include self in neighbours
     n,p = X.shape
@@ -201,7 +173,7 @@ def knn_graph(X,k):
     nz = np.nonzero(dists)
     const = (np.sum(dists[:])/(K*n))**2
     W[nz] = np.exp(-(dists[nz]**2)/const)
-    # symmetrise - very unlikely to be symmetric
+    # symmetrise
     W = (W+W.T)/2
     # calculate laplacian matrix
     d = np.sum(W, axis=1)
@@ -212,7 +184,14 @@ def knn_graph(X,k):
 
 def GOP(M, lamb, gamma):
     k = min(M.shape[1]-2, 5)
-    # print(k)
     phi, W = knn_graph(M.T, k)
     L_hat, S_hat, ob_fn = graph_reg_OP(M, lamb, gamma, phi)
     return S_hat
+
+def get_GOP_os(X, lamb=0.5, alpha=0.1):
+    """
+    to tie in to outlier detection object
+    """
+    M = X.T
+    S_hat = GOP(M, lamb, alpha)
+    return np.sum(S_hat, axis=0)
