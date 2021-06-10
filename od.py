@@ -8,7 +8,6 @@ from dens_os import get_OCSVM_os, get_IF_os, get_GMM_os, get_DBSCAN_os
 from gru import get_GRU_os, get_LSTM_os
 from outlier_pursuit import get_OP_os
 from admm_graph_OP_tweak import get_GOP_os
-from Simple_GOP import get_SGOP_os
 from ae import get_AE_os
 from vae import get_VAE_os
 
