@@ -217,19 +217,12 @@ def get_model(X):
     p = X.shape[1]
 
     sys = platform.system()
-
-    # print("sys = {}".format(sys))
-
     # Look for available gpu with cuda
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     # print('Device = {}'.format(device))
-
     num_epochs = 50
     batch_size = 8
     learning_rate = 0.001
-
-
     i_layer_size = p
     h1_layer_size = 64
     e_layer_size = 8
@@ -267,19 +260,29 @@ def get_AE_os(X):
 
 if __name__ == '__main__':
     # testing code.
+    from test_data import generate_test
+    n = 100
+    p = 32
+    r = 20
+    p_frac = 0.3
+    p_quant = 0.3
+    gamma = 0.05
+    noise = 0.1
+    ta = 6
+    X, outs = generate_test(n, p, r, p_frac, p_quant, gamma, noise, ta=ta)
 
-     # data_path = os.path.expanduser('~') +'/Data/synthetic/'
-    #
-    # x = np.arange(len(losses))
-    # plt.figure()
-    # plt.plot(x, losses)
-    # plt.xlabel('Running time')
-    # plt.ylabel('reconstruction loss')
-    # title = 'Reconstruction loss for ta {}'.format(ta)
-    # plt.title(title)
-    # fname = './images/synth_ta_{}_loss_plot.eps'.format(ta)
-    # # plt.show()
-    #
+    losses = get_ae_losses(X)
+
+    x = np.arange(len(losses))
+    plt.figure()
+    plt.plot(x, losses)
+    plt.xlabel('Running time')
+    plt.ylabel('reconstruction loss')
+    title = 'Reconstruction loss for ta {}'.format(ta)
+    plt.title(title)
+    fname = './images/synth_ta_{}_loss_plot.eps'.format(ta)
+    plt.show()
+
     # x = np.arange(len(training_losses))
     # plt.figure()
     # plt.plot(x, training_losses)
@@ -289,8 +292,8 @@ if __name__ == '__main__':
     # plt.title(title)
     # fname = './images/Synth_ta{}_training_loss_plot.eps'.format(ta)
     # plt.savefig(fname)
-    # # plt.show()
-    #
+    # plt.show()
+
     # n_samp = 1
     # batchsize = 1
     # params = (n,p,r, p_frac, p_quant,gamma, ta)
