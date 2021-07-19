@@ -4,21 +4,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import platform
-# from test_FP import generate_test, ta_1, ta_2, ta_3
-
-
-
 import torch
 from torch.utils.data import DataLoader, Dataset
-# import torchvision
 from torch import nn
 from torch.autograd import Variable
 import numpy.linalg as la
 import matplotlib.cm as cm
 from time import time, localtime
-from torchvision import transforms
 
-data_path = os.path.expanduser('~') +'/Data/synthetic/'
+
+
 
 class AE(nn.Module):
     def __init__(self, layers):
@@ -271,48 +266,49 @@ def get_AE_os(X):
     return losses
 
 if __name__ == '__main__':
+    # testing code.
 
-     data_path = os.path.expanduser('~') +'/Data/synthetic/'
-#
-# x = np.arange(len(losses))
-# plt.figure()
-# plt.plot(x, losses)
-# plt.xlabel('Running time')
-# plt.ylabel('reconstruction loss')
-# title = 'Reconstruction loss for ta {}'.format(ta)
-# plt.title(title)
-# fname = './images/synth_ta_{}_loss_plot.eps'.format(ta)
-# # plt.show()
-#
-# x = np.arange(len(training_losses))
-# plt.figure()
-# plt.plot(x, training_losses)
-# plt.xlabel('Epoch')
-# plt.ylabel('Loss')
-# title = 'Training Loss on Synth data ta_{}'.format(ta)
-# plt.title(title)
-# fname = './images/Synth_ta{}_training_loss_plot.eps'.format(ta)
-# plt.savefig(fname)
-# # plt.show()
-#
-# n_samp = 1
-# batchsize = 1
-# params = (n,p,r, p_frac, p_quant,gamma, ta)
-# X_code = get_codes(model, params, dataset)
-# print('X_code shape = {}, {}'.format(X_code.shape[0], X_code.shape[1]))
-# pca_proj(X_code, params)
+     # data_path = os.path.expanduser('~') +'/Data/synthetic/'
+    #
+    # x = np.arange(len(losses))
+    # plt.figure()
+    # plt.plot(x, losses)
+    # plt.xlabel('Running time')
+    # plt.ylabel('reconstruction loss')
+    # title = 'Reconstruction loss for ta {}'.format(ta)
+    # plt.title(title)
+    # fname = './images/synth_ta_{}_loss_plot.eps'.format(ta)
+    # # plt.show()
+    #
+    # x = np.arange(len(training_losses))
+    # plt.figure()
+    # plt.plot(x, training_losses)
+    # plt.xlabel('Epoch')
+    # plt.ylabel('Loss')
+    # title = 'Training Loss on Synth data ta_{}'.format(ta)
+    # plt.title(title)
+    # fname = './images/Synth_ta{}_training_loss_plot.eps'.format(ta)
+    # plt.savefig(fname)
+    # # plt.show()
+    #
+    # n_samp = 1
+    # batchsize = 1
+    # params = (n,p,r, p_frac, p_quant,gamma, ta)
+    # X_code = get_codes(model, params, dataset)
+    # print('X_code shape = {}, {}'.format(X_code.shape[0], X_code.shape[1]))
+    # pca_proj(X_code, params)
 
-# X_gen = generator(*params)
-# X = next(X_gen)
-# for i,data in enumerate(X_gen):
-#     continue
-# print(i)
+    # X_gen = generator(*params)
+    # X = next(X_gen)
+    # for i,data in enumerate(X_gen):
+    #     continue
+    # print(i)
 
 
-# losses = np.array(losses)
-# k = 5
-# worst = losses.argsort()[-k:][::-1]
-# # plt.figure(figsize=(8,2))
-# for i in range(k):
-#     idx = worst[i]
-#     print(idx)
+    # losses = np.array(losses)
+    # k = 5
+    # worst = losses.argsort()[-k:][::-1]
+    # # plt.figure(figsize=(8,2))
+    # for i in range(k):
+    #     idx = worst[i]
+    #     print(idx)

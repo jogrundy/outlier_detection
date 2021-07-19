@@ -1,25 +1,15 @@
 # VAE on MNIST
 import torch
-import torchvision
 from torch import nn
 from torch import optim
-# import torch.nn.functional as F
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision.utils import save_image
 
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 from ae import SynDataset
-import argparse
 
-
-# def to_img(x):
-#     x = x.clamp(0, 1)
-#     x = x.view(x.size(0), 1, 28, 28)
-#     return x
 
 
 class VAE(nn.Module):
@@ -113,24 +103,17 @@ def get_losses(model, dataset, params, device):
     """
     calculates reconstruction loss for each datapoint
     """
-
     n,p,r, p_frac, p_quant,gamma, ta, num_epochs = params
-
     model.eval()
     loader = DataLoader(dataset, batch_size=1)
     losses = []
     for i,data in enumerate(loader):
         data = Variable(data).to(device)
         # ===================forward=====================
-
         output, mu , logvar = model(data)
         loss = model.loss_fn(data, output, mu, logvar)
-
-
         losses.append(loss)
-    # print(np.array(losses, dtype='float')[:10])
     losses = np.array(losses, dtype='float')
-        # np.savetxt(loss_fname, losses)
     return losses
 
 def get_vae_losses(X):
@@ -178,7 +161,10 @@ def get_VAE_os(X):
     return losses
 
 if __name__ == '__main__':
+    #Testing code. 
+    from torchvision import transforms
     from torchvision.datasets import MNIST
+    from torchvision.utils import save_image
     os.makedirs("vae_img", exist_ok=True)
 
     num_epochs = 2
